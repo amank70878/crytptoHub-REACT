@@ -5,7 +5,7 @@ const Loader = ({ message = "loading" }) => {
   return (
     <>
       <Container
-        mt="30vh"
+        mt="300px"
         display="flex"
         flexDirection="column"
         alignItems="center"
@@ -15,12 +15,12 @@ const Loader = ({ message = "loading" }) => {
         letterSpacing=".3px"
       >
         <Spinner
-          mb="30px"
+          my="10px"
           thickness={["2px", "3px"]}
           speed="0.45s"
           emptyColor="gray.200"
           color="blue.400"
-          size={["lg", "xl"]}
+          size={["lg", "lg"]}
         />
         {message}
       </Container>

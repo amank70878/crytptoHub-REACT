@@ -1,0 +1,5 @@
+pagination
+theme 
+fetching chart per coin
+fetching more info about coins on home page 👍
+about me

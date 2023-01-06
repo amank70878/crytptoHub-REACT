@@ -1,11 +1,21 @@
-import { Box, Container, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Container,
+  Text,
+  useToast,
+  Wrap,
+  WrapItem,
+} from "@chakra-ui/react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Coins from "../components/Coins";
 import Error from "../components/Error";
 import Loader from "../components/Loader";
 
 const Exchanges = () => {
+  const toggleSuccessToast = useRef(null);
+  const toast = useToast();
   const [apiDataState, setApiDataState] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
   const [errorState, setErrorState] = useState(false);
@@ -20,6 +30,7 @@ const Exchanges = () => {
         );
         setApiDataState(data);
         setLoadingState(false);
+        toggleSuccessToast.current.click();
       } catch (error) {
         setErrorState(true);
         setLoadingState(false);
@@ -70,6 +81,22 @@ const Exchanges = () => {
               })
             )}
           </Box>
+          <Wrap display="none">
+            <WrapItem>
+              <Button
+                ref={toggleSuccessToast}
+                onClick={() =>
+                  toast({
+                    title: `your exchanges loaded successfully `,
+                    status: "success",
+                    isClosable: true,
+                    variant: "left-accent",
+                    duration: 1000,
+                  })
+                }
+              ></Button>
+            </WrapItem>
+          </Wrap>
         </Container>
       )}
     </>

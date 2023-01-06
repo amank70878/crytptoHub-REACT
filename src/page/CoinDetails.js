@@ -234,7 +234,8 @@ const CoinDetails = () => {
 const CustomProgressBar = ({ low, high, valueData }) => {
   return (
     <VStack pb="20px">
-      <Progress value={valueData} colorScheme={"cyan"} w="full" />
+      {/* <Progress value={valueData} colorScheme={"cyan"} w="full" /> */}
+      <Progress hasStripe value={"50"} w="full" />
       <HStack w={["80vw", "60vw"]} justifyContent="space-between">
         <Badge children={low} colorScheme="red"></Badge>
         <Text fontSize={["xs", "xl"]} fontWeight="500">

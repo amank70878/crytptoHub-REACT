@@ -1,11 +1,23 @@
-import { Box, Container, HStack, Radio, RadioGroup } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Container,
+  HStack,
+  Radio,
+  RadioGroup,
+  useToast,
+  Wrap,
+  WrapItem,
+} from "@chakra-ui/react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Coins from "../components/Coins";
 import Error from "../components/Error";
 import Loader from "../components/Loader";
 
 const CoinsContainer = () => {
+  const toggleSuccessToast = useRef(null);
+  const toast = useToast();
   const [apiData, setApiData] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
   const [errorState, setErrorState] = useState(false);
@@ -21,6 +33,7 @@ const CoinsContainer = () => {
         );
         setApiData(data);
         setLoadingState(false);
+        toggleSuccessToast.current.click();
       } catch (error) {
         setErrorState(true);
         setLoadingState(false);
@@ -91,6 +104,22 @@ const CoinsContainer = () => {
               })
             )}
           </Box>
+          <Wrap display="none">
+            <WrapItem>
+              <Button
+                ref={toggleSuccessToast}
+                onClick={() =>
+                  toast({
+                    title: `your Coins loaded successfully`,
+                    status: "success",
+                    isClosable: true,
+                    variant: "left-accent",
+                    duration: 1000,
+                  })
+                }
+              ></Button>
+            </WrapItem>
+          </Wrap>
         </Container>
       )}
     </>

@@ -9,7 +9,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import "./alal.css";
 
 ChartJS.register(
   CategoryScale,
