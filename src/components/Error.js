@@ -1,12 +1,7 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-} from "@chakra-ui/react";
+import { Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
 import React from "react";
 
-const Error = ({ title, description }) => {
+const Error = ({ title }) => {
   return (
     <>
       <Alert
@@ -22,13 +17,6 @@ const Error = ({ title, description }) => {
         <AlertTitle mt={4} mb={1} fontSize={["sm", "lg"]}>
           {title}
         </AlertTitle>
-        <AlertDescription
-          lineHeight="120%"
-          maxWidth="lg"
-          fontSize={("xs", "md")}
-        >
-          {description}
-        </AlertDescription>
       </Alert>
     </>
   );

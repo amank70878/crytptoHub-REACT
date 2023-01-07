@@ -1,11 +1,11 @@
 import React from "react";
 import { Container, Spinner } from "@chakra-ui/react";
 
-const Loader = ({ message = "loading" }) => {
+const Loader = ({ message = "loading", marginTop = "200px" }) => {
   return (
     <>
       <Container
-        mt="300px"
+        mt={marginTop}
         display="flex"
         flexDirection="column"
         alignItems="center"

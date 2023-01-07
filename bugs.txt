@@ -1,5 +1,9 @@
+ping API 👍
 pagination
 theme 
-fetching chart per coin
+fetching chart per coin on search page 👍
 fetching more info about coins on home page 👍
-about me
+fetching prices of coins on home 👍
+fetching supported currencies on coins
+
+
