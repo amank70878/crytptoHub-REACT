@@ -2,6 +2,8 @@ import {
   Badge,
   Button,
   Container,
+  Drawer,
+  DrawerOverlay,
   HStack,
   Image,
   Progress,
@@ -11,6 +13,7 @@ import {
   StatArrow,
   StatHelpText,
   Text,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -19,15 +22,21 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Error from "../components/Error";
 import Loader from "../components/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import DrawerContainer from "../components/DrawerContainer";
 
 const CoinDetails = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = React.useRef();
+  const { currencyReduxState } = useSelector((state) => state.currencyStore);
+  const dispatch = useDispatch();
   const { coinId } = useParams();
   const [data, setData] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
   const [errorState, setErrorState] = useState(false);
   const [errorCodeState, setErrorCodeState] = useState("");
   const [errorNameState, setErrorNameState] = useState("");
-  const [currencyState, setCurrencyState] = useState("usd");
+  const [currencyState, setCurrencyState] = useState(currencyReduxState);
   const [daysForChart, setDaysForChart] = useState("24h");
   const [chartArray, setChartArray] = useState([]);
   const btnsValue = ["24h", "7h", "14d", "30h", "60h", "200h", "1y", "max"];
@@ -58,6 +67,14 @@ const CoinDetails = () => {
     fetchIdCoinsFunc();
   }, [coinId, currencyState, daysForChart]);
 
+  // for dispatching current currencies
+  useEffect(() => {
+    dispatch({
+      type: "currencyType",
+      payload: currencyState,
+    });
+  }, [currencyState, dispatch]);
+
   return (
     <>
       {errorState ? (
@@ -82,14 +99,14 @@ const CoinDetails = () => {
                 flexWrap="wrap"
                 alignItems="center"
                 justifyContent="flex-start"
-                height={["90px", "auto"]}
+                height={["90px", ""]}
               >
                 <div></div>
                 {btnsValue.map((i) => {
                   return (
                     <Button
                       w="50px"
-                      py={["0.5", "1"]}
+                      my={["1", "2"]}
                       px={["30px", "10"]}
                       key={i}
                       onClick={() => setDaysForChartFunc(i)}
@@ -117,6 +134,18 @@ const CoinDetails = () => {
                     <Radio value="inr">₹INR</Radio>
                     <Radio value="usd">$USD</Radio>
                     <Radio value="eur">€EUR</Radio>
+                    <Button ref={btnRef} onClick={onOpen}>
+                      More..
+                    </Button>
+                    <Drawer
+                      isOpen={isOpen}
+                      placement="right"
+                      onClose={onClose}
+                      finalFocusRef={btnRef}
+                    >
+                      <DrawerOverlay />
+                      <DrawerContainer />
+                    </Drawer>
                   </HStack>
                 </RadioGroup>
               </HStack>
@@ -137,12 +166,13 @@ const CoinDetails = () => {
               </Text>
 
               <Text fontSize={["lg", "2xl"]} fontWeight="500">
-                {" "}
                 {currencyState === "inr"
                   ? "₹"
                   : currencyState === "usd"
                   ? "$"
-                  : "€"}{" "}
+                  : currencyState === "eur"
+                  ? "€"
+                  : currencyState}{" "}
                 {data.market_data.current_price[currencyState]}
               </Text>
 
@@ -181,9 +211,10 @@ const CoinDetails = () => {
                     ? "₹"
                     : currencyState === "usd"
                     ? "$"
-                    : "€"
+                    : currencyState === "eur"
+                    ? "€"
+                    : currencyState
                 }
-                Color={""}
               />
 
               <CustomDataDisplayer
@@ -195,7 +226,9 @@ const CoinDetails = () => {
                     ? "₹"
                     : currencyState === "usd"
                     ? "$"
-                    : "€"
+                    : currencyState === "eur"
+                    ? "€"
+                    : currencyState
                 }
               />
 
@@ -208,20 +241,20 @@ const CoinDetails = () => {
                     ? "₹"
                     : currencyState === "usd"
                     ? "$"
-                    : "€"
+                    : currencyState === "eur"
+                    ? "€"
+                    : currencyState
                 }
               />
 
               <CustomDataDisplayer
                 title={"Total Supply"}
                 value={data.market_data.total_supply}
-                Color={"black"}
               />
 
               <CustomDataDisplayer
                 title={"Circulating Supply"}
                 value={data.market_data.circulating_supply}
-                Color={"black"}
               />
             </VStack>
           </Container>
@@ -231,10 +264,9 @@ const CoinDetails = () => {
   );
 };
 
-const CustomProgressBar = ({ low, high, valueData }) => {
+const CustomProgressBar = ({ low, high }) => {
   return (
     <VStack pb="20px">
-      {/* <Progress value={valueData} colorScheme={"cyan"} w="full" /> */}
       <Progress hasStripe value={"50"} w="full" />
       <HStack w={["80vw", "60vw"]} justifyContent="space-between">
         <Badge children={low} colorScheme="red"></Badge>
@@ -259,7 +291,7 @@ const CustomDataDisplayer = ({ title, value, Color, currency }) => {
         >
           {title}
         </Text>
-        <Text fontSize={["sm", "md"]} fontWeight="400" color="#252525">
+        <Text fontSize={["sm", "md"]} fontWeight="400">
           {currency} {value}
         </Text>
       </HStack>

@@ -1,4 +1,5 @@
 import { Line } from "react-chartjs-2";
+import "../App.css";
 import {
   Chart as ChartJS,
   CategoryScale,

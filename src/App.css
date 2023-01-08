@@ -11,7 +11,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Open Sans', sans-serif;
+      --font3: 'Karla', sans-serif;
 }
 
 body {
@@ -35,6 +35,10 @@ body {
       width: 95vw;
       height: 45vh;
       object-fit: cover
+}
+
+canvas {
+      color: #000;
 }
 
 .carousel .control-prev.control-arrow:before {

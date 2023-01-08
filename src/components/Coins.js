@@ -28,9 +28,10 @@ const Coins = ({
         <Link to={`/coins/${Ckey}`}>
           <Box
             mx={["1", "2"]}
-            my={["2", "3"]}
+            my={["3", "4"]}
             boxShadow="1px 1px 14px 0px #00000018"
             p="2"
+            bgColor="#80808015"
             borderRadius="10px"
             w={["180px", "230px"]}
             cursor="pointer"
@@ -56,14 +57,16 @@ const Coins = ({
                 {symbol && <span> ({symbol})</span>}
               </Text>
               {price && (
-                <Text fontSize={["sm", "lg"]} fontWeight={"500"}>
+                <Text fontSize={["sm", "lg"]}>
                   Price :{" "}
                   {CcurrencyState === "inr"
                     ? "₹"
                     : CcurrencyState === "usd"
                     ? "$"
-                    : "€"}{" "}
-                  {price}
+                    : CcurrencyState === "eur"
+                    ? "€"
+                    : CcurrencyState}
+                  <b> {price}</b>
                 </Text>
               )}
               {country && (
@@ -86,7 +89,6 @@ const Coins = ({
                   position="absolute"
                   right="0"
                   top={["-16px", "-20px"]}
-                  zIndex="10"
                 >
                   {Erank}/10
                 </Text>
@@ -101,7 +103,6 @@ const Coins = ({
                   position="absolute"
                   right="0"
                   top={["-16px", "-20px"]}
-                  zIndex="10"
                 >
                   {Crank}/10
                 </Text>
@@ -138,10 +139,10 @@ const Coins = ({
         <a href={url} target="blank">
           <Box
             mx={["1", "2"]}
-            my={["2", "3"]}
+            my={["3", "4"]}
             boxShadow="1px 1px 14px 0px #00000018"
             p="2"
-            borderRadius="10px"
+            bgColor="#80808015"
             w={["180px", "230px"]}
             cursor="pointer"
             transition={"all 300ms "}

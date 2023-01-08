@@ -25,7 +25,7 @@ const Exchanges = () => {
       );
       setApiDataState(data);
       setLoadingState(false);
-      toggleSuccessToast.current.click();
+      toggleSuccessToast.current.click(); 
     };
     fetchCoinsFunc();
   }, []);

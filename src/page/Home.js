@@ -23,6 +23,9 @@ import {
   StatGroup,
   StatLabel,
   StatNumber,
+  useDisclosure,
+  Drawer,
+  DrawerOverlay,
 } from "@chakra-ui/react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import axios from "axios";
@@ -31,11 +34,23 @@ import { Carousel } from "react-responsive-carousel";
 import Loader from "../components/Loader";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "../App.css";
+import { useDispatch, useSelector } from "react-redux";
+import DrawerContainer from "../components/DrawerContainer";
 
 const Home = () => {
+  // drawer here
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = React.useRef();
+
+  // redux here
+  const { currencyReduxState } = useSelector((state) => state.currencyStore);
+  console.log(`home currencyState ${currencyReduxState}`);
+  const dispatch = useDispatch();
+
   // fetching table content
   const [finalArrayState, setFinalArrayState] = useState("");
-  const [currencyState, setCurrencyState] = useState("usd");
+  const [currencyState, setCurrencyState] = useState(currencyReduxState);
+  console.log(`home currencyState ${currencyState}`);
   const [loadingState, setLoadingState] = useState(true);
   useEffect(() => {
     const fetchTrendingCoinFunc = async () => {
@@ -55,26 +70,39 @@ const Home = () => {
         }
         setFinalArrayState(sampleArr);
         setLoadingState(false);
-      } catch (err) {
-        setLoadingState(true);
+      } catch (error) {
+        console.warn("error in feching trending coin details", error);
       }
     };
     fetchTrendingCoinFunc();
-  }, [currencyState]);
+  }, [currencyState, currencyReduxState]);
 
   //fetching coin price
   const [loadingPriceState, setLoadingPriceState] = useState(false);
   const [priceValueState, setPriceValueState] = useState("");
   const [priceInputCoin, setPriceInputCoin] = useState("bitcoin");
   const fetchCoinPriceFunc = async () => {
-    setLoadingPriceState(true);
-    const { data } = await axios.get(
-      `https://api.coingecko.com/api/v3/simple/price?ids=${priceInputCoin}&vs_currencies=${currencyState}`
-    );
-    setLoadingPriceState(false);
-    setPriceValueState(data[priceInputCoin][currencyState]);
-    setLoadingPriceState(false);
+    try {
+      setLoadingPriceState(true);
+      const { data } = await axios.get(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${priceInputCoin}&vs_currencies=${currencyState}`
+      );
+      setLoadingPriceState(false);
+      setPriceValueState(data[priceInputCoin][currencyState]);
+      setLoadingPriceState(false);
+    } catch (error) {
+      console.warn("error in feching price", error);
+    }
   };
+
+  // for dispatching current currencies
+  useEffect(() => {
+    dispatch({
+      type: "currencyType",
+      payload: currencyState,
+    });
+    fetchCoinPriceFunc(); // eslint-disable-next-line
+  }, [currencyState, currencyReduxState]);
 
   return (
     <>
@@ -178,7 +206,9 @@ const Home = () => {
                         ? "₹"
                         : currencyState === "usd"
                         ? "$"
-                        : "€"}{" "}
+                        : currencyState === "eur"
+                        ? "€"
+                        : currencyState}{" "}
                       {priceValueState}
                     </StatNumber>
                   </Stat>
@@ -186,8 +216,8 @@ const Home = () => {
               ) : (
                 <>
                   <Stat display="grid" placeItems="center">
-                    <StatLabel fontSize={["sm", "xl"]} color="blackAlpha.700">
-                      Enter the coin name to check its latest price
+                    <StatLabel fontSize={["sm", "xl"]}>
+                      Enter the coin name to check its latest price{" "}
                     </StatLabel>
                   </Stat>
                 </>
@@ -205,14 +235,7 @@ const Home = () => {
             Cryptocurrency Prices with CoinGecko API
           </Heading>
 
-          <HStack
-            gap={3}
-            display="flex"
-            justifyContent="center"
-            alignItems={"center"}
-            position="relative"
-            px="2"
-          >
+          <HStack>
             <RadioGroup
               px="4"
               value={currencyState}
@@ -224,6 +247,18 @@ const Home = () => {
                 <Radio value="eur">€EUR</Radio>
               </HStack>
             </RadioGroup>
+            <Button ref={btnRef} onClick={onOpen}>
+              More..
+            </Button>
+            <Drawer
+              isOpen={isOpen}
+              placement="right"
+              onClose={onClose}
+              finalFocusRef={btnRef}
+            >
+              <DrawerOverlay />
+              <DrawerContainer />
+            </Drawer>
           </HStack>
         </HStack>
 
@@ -305,7 +340,6 @@ const Home = () => {
                       <Tr
                         key={itemsData[0].data.id}
                         transition={"all 300ms "}
-                        borderBottom="1px solid #2b2b2b14"
                         css={{
                           "&:hover": {
                             boxShadow: "1px 1px 14px 0px #00000018",
@@ -321,7 +355,6 @@ const Home = () => {
                             <Text
                               px="1"
                               fontSize={["xs", "md"]}
-                              color="blackAlpha.800"
                               fontWeight="500"
                               cursor="pointer"
                             >
@@ -333,24 +366,21 @@ const Home = () => {
                               w={["25px", "40px"]}
                               borderRadius="50%"
                             />
-
                             <Text
-                              px={["", "1"]}
+                              px={["", ".5"]}
                               fontSize={["sm", "md"]}
                               fontWeight="500"
                               cursor="pointer"
                             >
                               {itemsData[0].data.name}
                             </Text>
-
                             <Text
-                              px={["0", "1"]}
+                              pr={["0", "1"]}
                               fontSize={["2xs", "sm"]}
-                              color="blackAlpha.800"
                               fontWeight="500"
                               cursor="pointer"
                             >
-                              {itemsData[0].data.symbol}
+                              -{itemsData[0].data.symbol}
                             </Text>
                           </HStack>
                         </Td>
@@ -361,7 +391,9 @@ const Home = () => {
                               ? "₹"
                               : currencyState === "usd"
                               ? "$"
-                              : "€"}
+                              : currencyState === "eur"
+                              ? "€"
+                              : currencyState}{" "}
                             {
                               itemsData[0].data.market_data.current_price[
                                 currencyState

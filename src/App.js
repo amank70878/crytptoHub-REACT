@@ -12,16 +12,17 @@ import "./App.css";
 function App() {
   const [errorState, setErrorState] = useState(false);
   useEffect(() => {
-    const fetchCoinsFunc = async () => {
+    const pingCoinGeckoApiFunc = async () => {
       try {
         await axios.get(`https://api.coingecko.com/api/v3/ping`);
       } catch (error) {
+        console.warn(error);
         setTimeout(() => {
           setErrorState(true);
         }, 1000);
       }
     };
-    fetchCoinsFunc();
+    pingCoinGeckoApiFunc();
   }, [errorState]);
   return (
     <>
