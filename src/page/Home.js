@@ -44,13 +44,12 @@ const Home = () => {
 
   // redux here
   const { currencyReduxState } = useSelector((state) => state.currencyStore);
-  console.log(`home currencyState ${currencyReduxState}`);
   const dispatch = useDispatch();
+  // console.log(`home up currencyReduxState ${currencyReduxState}`);
 
   // fetching table content
   const [finalArrayState, setFinalArrayState] = useState("");
   const [currencyState, setCurrencyState] = useState(currencyReduxState);
-  console.log(`home currencyState ${currencyState}`);
   const [loadingState, setLoadingState] = useState(true);
   useEffect(() => {
     const fetchTrendingCoinFunc = async () => {
@@ -75,7 +74,7 @@ const Home = () => {
       }
     };
     fetchTrendingCoinFunc();
-  }, [currencyState, currencyReduxState]);
+  }, [currencyState]);
 
   //fetching coin price
   const [loadingPriceState, setLoadingPriceState] = useState(false);
@@ -101,9 +100,18 @@ const Home = () => {
       type: "currencyType",
       payload: currencyState,
     });
+    // console.log(`home useEffect currencyReduxState ${currencyReduxState}`);
     fetchCoinPriceFunc(); // eslint-disable-next-line
-  }, [currencyState, currencyReduxState]);
+  }, [currencyState, dispatch]);
 
+  // for dispatching current currencies
+  useEffect(() => {
+    setCurrencyState(currencyReduxState);
+    // console.log(`home useEffect currencyReduxState ${currencyReduxState}`);
+  }, [currencyReduxState]);
+
+  // console.log(`home down currencyReduxState ${currencyReduxState}`);
+  // console.log(`home currencyState ${currencyState}`);
   return (
     <>
       <VStack width="100vw">

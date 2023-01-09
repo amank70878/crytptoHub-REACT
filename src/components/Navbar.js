@@ -58,6 +58,15 @@ const Navbar = () => {
           >
             <Link to={"/exchanges"}>Exchanges</Link>
           </Button>
+
+          <Button
+            variant={"unstyled"}
+            fontSize={["xs", "lg"]}
+            color={"whiteAlpha.800"}
+            p={0}
+          >
+            <Link to={"/nfts"}>Nfts</Link>
+          </Button>
         </HStack>
 
         <HStack>

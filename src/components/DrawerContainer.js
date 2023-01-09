@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
@@ -9,6 +10,7 @@ import {
   Input,
   Text,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
@@ -43,7 +45,6 @@ const DrawerContainer = () => {
 
   // for dispatching current currencies
   const setCurrencyFunc = (e) => {
-    console.log("from drawer", e.target.outerText);
     dispatch({
       type: "currencyType",
       payload: e.target.outerText,
@@ -111,14 +112,14 @@ const DrawerContainer = () => {
           >
             Currencies
           </Heading>
-          <Box display="flex" flexWrap="wrap" justifyContent="space-evenly">
+          <Box display="flex" flexWrap="wrap" justifyContent="space-between">
             {currencies &&
               currencies.map((items) => {
                 return (
                   <Text
                     key={items}
                     bgColor="#6d6d6d14"
-                    w="40%"
+                    w="48%"
                     cursor="pointer"
                     fontSize={["md", "lg"]}
                     py={["1", ""]}

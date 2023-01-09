@@ -8,6 +8,8 @@ import CoinsContainer from "./page/CoinsContainer";
 import Exchanges from "./page/Exchanges";
 import Home from "./page/Home";
 import "./App.css";
+import NftsPage from "./page/NftsPage";
+import NftsDetails from "./page/NftsDetails";
 
 function App() {
   const [errorState, setErrorState] = useState(false);
@@ -38,6 +40,8 @@ function App() {
             <Route path="/coins" element={<CoinsContainer />} />
             <Route path="/coins/:coinId" element={<CoinDetails />} />
             <Route path="/exchanges" element={<Exchanges />} />
+            <Route path="/nfts" element={<NftsPage />} />
+            <Route path="/nfts/:nftsId" element={<NftsDetails />} />
           </Routes>
         )}
       </Router>

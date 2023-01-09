@@ -1,15 +1,15 @@
 ping API 👍
 pagination coins👍
-pagination exchanges
-nfts
-global
 theme 👍
 fetching chart per coin on search page 👍
 fetching more info about coins on home page 👍
 fetching prices of coins on home 👍
-fetching supported currencies on coins
 filtering data per page 👍
 currency data redux 👍
-
-
-
+fetching supported currencies on coins 👍
+pagination exchanges 👍
+nfts 👍
+find a way to find total number of nfts 👍
+find a way to find total number of exchanges 👍
+dispatch redux state from everywhere apart from 👍
+nftDetails page 

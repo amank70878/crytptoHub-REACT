@@ -2,72 +2,44 @@ import {
   Box,
   Button,
   Container,
-  Drawer,
-  DrawerOverlay,
   HStack,
   Menu,
   MenuButton,
-  MenuDivider,
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
-  Radio,
-  RadioGroup,
   Text,
-  useDisclosure,
   useToast,
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
-import Coins from "../components/Coins";
-import Loader from "../components/Loader";
 import SortIcon from "@material-ui/icons/Sort";
-import { useSelector } from "react-redux";
-import DrawerContainer from "../components/DrawerContainer";
+import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import Loader from "../components/Loader";
 
-const CoinsContainer = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = React.useRef();
-  const { currencyReduxState } = useSelector((state) => state.currencyStore);
+const NftsPage = () => {
   const toggleSuccessToast = useRef(null);
   const toast = useToast();
-  const [apiData, setApiData] = useState([]);
+  const [apiDataState, setApiDataState] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
-  const [currencyState, setCurrencyState] = useState(currencyReduxState);
-
-  // page filter states
+  const [totalNfts, setTotalNfts] = useState(0);
   const [perPage, setPerPage] = useState(100);
-  const [pageNum, setPageNum] = useState(1);
-  const [totalCoinItems, settotalCoinItems] = useState(0);
-  const [totalPage, setTotalPage] = useState(0);
+  const [pageNum, setPageNum] = useState(23);
+  const [totalPage, setTotalPage] = useState(23);
   const [btns, setBtns] = useState([]);
 
-  // fetching coins data
   useEffect(() => {
-    const fetchCoinsFunc = async () => {
+    const fetchNftsFunc = async () => {
       try {
         const { data } = await axios.get(
-          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currencyState}&order=market_cap_desc&per_page=${perPage}&page=${pageNum}&sparkline=false`
+          `https://api.coingecko.com/api/v3/nfts/list?per_page=${perPage}&page=${pageNum}`
         );
-        setApiData(data);
-      } catch (error) {
-        console.warn(error);
-      }
-    };
-    fetchCoinsFunc();
-  }, [currencyState, pageNum, perPage, totalCoinItems, totalPage]);
+        setApiDataState(data);
 
-  // fetching total number of coins data length
-  useEffect(() => {
-    const fetchTotalCoinsFunc = async () => {
-      try {
-        const { data: total } = await axios.get(
-          `https://api.coingecko.com/api/v3/coins/list`
-        );
-        settotalCoinItems(total.length);
-        setTotalPage((totalCoinItems / perPage).toFixed());
+        setTotalNfts(2273);
+        setTotalPage((totalNfts / perPage).toFixed());
         setLoadingState(false);
         toggleSuccessToast.current.click();
 
@@ -77,20 +49,17 @@ const CoinsContainer = () => {
         }
         setBtns(sampleArr);
       } catch (error) {
-        console.warn(error.code);
+        console.warn(error);
       }
     };
-    fetchTotalCoinsFunc();
-  }, [perPage, totalCoinItems, totalPage, pageNum]);
-
-  useEffect(() => {
-    setCurrencyState(currencyReduxState);
-  }, [currencyReduxState]);
-
+    fetchNftsFunc();
+  }, [pageNum, perPage, totalNfts, totalPage]);
   return (
     <>
-      <Container pt="20px" maxW={["100vw", "85vw"]} overflowX="hidden">
+      <Container p="0" maxW={["100vw", "85vw"]}>
+        {/* heading */}
         <HStack
+          py="10px"
           gap={3}
           display="flex"
           flexDirection={["row"]}
@@ -128,73 +97,42 @@ const CoinsContainer = () => {
                   100
                 </MenuItemOption>
               </MenuOptionGroup>
-
-              <MenuDivider />
-
-              <MenuOptionGroup>
-                <MenuItemOption>
-                  <Button ref={btnRef} onClick={onOpen} variant="unstyled">
-                    go to Currencies
-                  </Button>
-                </MenuItemOption>
-              </MenuOptionGroup>
             </MenuList>
           </Menu>
-          <RadioGroup value={currencyState} onChange={setCurrencyState}>
-            <HStack gap={2}>
-              <Radio value="inr">₹INR</Radio>
-              <Radio value="usd">$USD</Radio>
-              <Radio value="eur">€EUR</Radio>{" "}
-              <Button ref={btnRef} onClick={onOpen}>
-                More..
-              </Button>
-              <Drawer
-                isOpen={isOpen}
-                placement="right"
-                onClose={onClose}
-                finalFocusRef={btnRef}
-              >
-                <DrawerOverlay />
-                <DrawerContainer />
-              </Drawer>
-            </HStack>
-          </RadioGroup>
+          <Text textAlign={"center"} fontSize={["md", "xl"]}>
+            Nfts
+          </Text>
           <Text fontWeight={["500", "600"]} fontSize={["md", "lg"]}>
             Page : {pageNum}
           </Text>
         </HStack>
+
+        {/* cards */}
         <Box
           display="flex"
           flexDirection={"row"}
           flexWrap="wrap"
-          alignItems={"center"}
+          alignItems={["center", "flex-start"]}
           justifyContent="space-evenly"
         >
           {loadingState ? (
-            <Loader message="Fetching Crypto Coins......." />
+            <Loader message="Fetching Crypto Exchanges......." />
           ) : (
-            apiData.map((items, indexK) => {
+            apiDataState.map((items, indexK) => {
               indexK++;
               return (
-                <Coins
-                  key={indexK}
-                  Ckey={items.id}
-                  price={items.current_price}
-                  image={items.image}
+                <NftCard
+                  key={items.id}
+                  id={items.id}
                   name={items.name}
-                  totalSupply={items.total_supply}
                   symbol={items.symbol}
-                  Crank={items.market_cap_rank}
-                  lastUpdate={items.last_updated}
-                  imgSizeW={["70px", "90px"]}
-                  imgSizeH={["70px", "90px"]}
-                  CcurrencyState={currencyState}
-                  CoinsContainerByME={true}
                 />
               );
             })
           )}
         </Box>
+
+        {/* btns */}
         {!loadingState && (
           <HStack overflowX="auto" w="100%" pb={["", "2"]} py="1">
             {btns.map((items, index = 0) => {
@@ -216,13 +154,14 @@ const CoinsContainer = () => {
           </HStack>
         )}
 
+        {/* popup */}
         <Wrap display="none">
           <WrapItem>
             <Button
               ref={toggleSuccessToast}
               onClick={() =>
                 toast({
-                  title: `your Coins loaded successfully`,
+                  title: `your nfts loaded successfully `,
                   status: "success",
                   isClosable: true,
                   variant: "left-accent",
@@ -237,4 +176,34 @@ const CoinsContainer = () => {
   );
 };
 
-export default CoinsContainer;
+export const NftCard = ({ id, name, symbol }) => {
+  return (
+    <>
+      <Link to={`/nfts/${id}`}>
+        <Box
+          mx={["", "2"]}
+          my={["2", "3"]}
+          boxShadow="1px 1px 14px 0px #00000018"
+          p="2"
+          bgColor="#80808015"
+          borderRadius="10px"
+          w={["90vw", "280px"]}
+          cursor="pointer"
+          transition={"all 300ms "}
+          position="relative"
+          css={{
+            "&:hover": {
+              transform: "scale(1.1)",
+            },
+          }}
+        >
+          <Text fontSize={["sm", "lg"]}>
+            Name: <b>{name ? name : "NA"}</b> ({symbol && symbol})
+          </Text>
+        </Box>
+      </Link>
+    </>
+  );
+};
+
+export default NftsPage;

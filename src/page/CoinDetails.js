@@ -75,6 +75,10 @@ const CoinDetails = () => {
     });
   }, [currencyState, dispatch]);
 
+  useEffect(() => {
+    setCurrencyState(currencyReduxState);
+  }, [currencyReduxState]);
+
   return (
     <>
       {errorState ? (
