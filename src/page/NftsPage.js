@@ -9,19 +9,14 @@ import {
   MenuList,
   MenuOptionGroup,
   Text,
-  useToast,
-  Wrap,
-  WrapItem,
 } from "@chakra-ui/react";
 import axios from "axios";
 import SortIcon from "@material-ui/icons/Sort";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
 
 const NftsPage = () => {
-  const toggleSuccessToast = useRef(null);
-  const toast = useToast();
   const [apiDataState, setApiDataState] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
   const [totalNfts, setTotalNfts] = useState(0);
@@ -31,6 +26,7 @@ const NftsPage = () => {
   const [btns, setBtns] = useState([]);
 
   useEffect(() => {
+    document.title = `CryptoHub - Nfts `;
     const fetchNftsFunc = async () => {
       try {
         const { data } = await axios.get(
@@ -41,7 +37,6 @@ const NftsPage = () => {
         setTotalNfts(2273);
         setTotalPage((totalNfts / perPage).toFixed());
         setLoadingState(false);
-        toggleSuccessToast.current.click();
 
         let sampleArr = [];
         for (let index = 0; index < totalPage; index++) {
@@ -153,24 +148,6 @@ const NftsPage = () => {
             })}
           </HStack>
         )}
-
-        {/* popup */}
-        <Wrap display="none">
-          <WrapItem>
-            <Button
-              ref={toggleSuccessToast}
-              onClick={() =>
-                toast({
-                  title: `your nfts loaded successfully `,
-                  status: "success",
-                  isClosable: true,
-                  variant: "left-accent",
-                  duration: 1000,
-                })
-              }
-            ></Button>
-          </WrapItem>
-        </Wrap>
       </Container>
     </>
   );

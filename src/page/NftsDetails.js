@@ -5,24 +5,17 @@ import {
   Collapse,
   Container,
   Divider,
-  Drawer,
-  DrawerOverlay,
   Heading,
   HStack,
   Image,
-  Progress,
-  Radio,
-  RadioGroup,
   Stat,
   StatArrow,
   StatHelpText,
   Text,
-  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 
@@ -34,17 +27,13 @@ const NftsDetails = () => {
   const [show, setShow] = React.useState(false);
   const handleToggle = () => setShow(!show);
 
-  // redux
-  const { currencyReduxState } = useSelector((state) => state.currencyStore);
-  const dispatch = useDispatch();
-
   // use state
-  const [currencyState, setCurrencyState] = useState(currencyReduxState);
   const [loadingState, setloadingState] = useState(true);
   const [fetchedNft, setFetchedNft] = useState("");
 
   // fetching nfts for a id
   useEffect(() => {
+    document.title = `CryptoHub - Nfts / ${nftsId} `;
     const fetchNftFunc = async () => {
       try {
         const { data } = await axios.get(
@@ -57,15 +46,7 @@ const NftsDetails = () => {
       }
     };
     fetchNftFunc();
-  }, []);
-
-  // for dispatching current currencies
-  useEffect(() => {
-    dispatch({
-      type: "currencyType",
-      payload: currencyState,
-    });
-  }, [currencyState, dispatch]);
+  }, [nftsId]);
 
   return (
     <>
@@ -116,26 +97,27 @@ const NftsDetails = () => {
               }
               type="percentage"
             />
-
-            <VStack>
-              <Heading
-                textAlign="left"
-                w="full"
-                fontSize={["", "2xl"]}
-                mt={["7px", "10px"]}
-                fontWeight={["500", "400"]}
-              >
-                Description :
-              </Heading>
-              <Box maxH={["200px", "300px"]} overflowY="auto">
-                <Collapse startingHeight={60} in={show}>
-                  {fetchedNft.description}
-                </Collapse>
-              </Box>
-              <Button size="sm" onClick={handleToggle} w="full">
-                Show {show ? "Less" : "More"}
-              </Button>
-            </VStack>
+            {fetchedNft.description && (
+              <VStack>
+                <Heading
+                  textAlign="left"
+                  w="full"
+                  fontSize={["", "2xl"]}
+                  mt={["7px", "10px"]}
+                  fontWeight={["500", "400"]}
+                >
+                  Description :
+                </Heading>
+                <Box maxH={["200px", "300px"]} overflowY="auto">
+                  <Collapse startingHeight={60} in={show}>
+                    {fetchedNft.description}
+                  </Collapse>
+                </Box>
+                <Button size="sm" onClick={handleToggle} w="full">
+                  Show {show ? "Less" : "More"}
+                </Button>
+              </VStack>
+            )}
           </VStack>
         </Container>
       )}

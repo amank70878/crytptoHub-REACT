@@ -9,19 +9,14 @@ import {
   MenuList,
   MenuOptionGroup,
   Text,
-  useToast,
-  Wrap,
-  WrapItem,
 } from "@chakra-ui/react";
 import axios from "axios";
 import SortIcon from "@material-ui/icons/Sort";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Coins from "../components/Coins";
 import Loader from "../components/Loader";
 
 const Exchanges = () => {
-  const toggleSuccessToast = useRef(null);
-  const toast = useToast();
   const [apiDataState, setApiDataState] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
 
@@ -34,6 +29,7 @@ const Exchanges = () => {
   const [btns, setBtns] = useState([]);
 
   useEffect(() => {
+    document.title = `CryptoHub - Exchanges `;
     const fetchCoinsFunc = async () => {
       try {
         const { data } = await axios.get(
@@ -44,7 +40,6 @@ const Exchanges = () => {
         settotalExchangesItems(497);
         setTotalPage((totalExchangesItems / perPage).toFixed());
         setLoadingState(false);
-        toggleSuccessToast.current.click();
 
         let sampleArr = [];
         for (let index = 0; index < totalPage; index++) {
@@ -160,24 +155,6 @@ const Exchanges = () => {
             })}
           </HStack>
         )}
-
-        {/* toast */}
-        <Wrap display="none">
-          <WrapItem>
-            <Button
-              ref={toggleSuccessToast}
-              onClick={() =>
-                toast({
-                  title: `your exchanges loaded successfully `,
-                  status: "success",
-                  isClosable: true,
-                  variant: "left-accent",
-                  duration: 1000,
-                })
-              }
-            ></Button>
-          </WrapItem>
-        </Wrap>
       </Container>
     </>
   );

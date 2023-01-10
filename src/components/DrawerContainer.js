@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
@@ -10,7 +9,6 @@ import {
   Input,
   Text,
   useDisclosure,
-  VStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";

@@ -15,12 +15,9 @@ import {
   RadioGroup,
   Text,
   useDisclosure,
-  useToast,
-  Wrap,
-  WrapItem,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Coins from "../components/Coins";
 import Loader from "../components/Loader";
 import SortIcon from "@material-ui/icons/Sort";
@@ -31,8 +28,6 @@ const CoinsContainer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
   const { currencyReduxState } = useSelector((state) => state.currencyStore);
-  const toggleSuccessToast = useRef(null);
-  const toast = useToast();
   const [apiData, setApiData] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
   const [currencyState, setCurrencyState] = useState(currencyReduxState);
@@ -46,6 +41,7 @@ const CoinsContainer = () => {
 
   // fetching coins data
   useEffect(() => {
+    document.title = `CryptoHub - Coins`;
     const fetchCoinsFunc = async () => {
       try {
         const { data } = await axios.get(
@@ -69,7 +65,6 @@ const CoinsContainer = () => {
         settotalCoinItems(total.length);
         setTotalPage((totalCoinItems / perPage).toFixed());
         setLoadingState(false);
-        toggleSuccessToast.current.click();
 
         let sampleArr = [];
         for (let index = 0; index < totalPage; index++) {
@@ -215,23 +210,6 @@ const CoinsContainer = () => {
             })}
           </HStack>
         )}
-
-        <Wrap display="none">
-          <WrapItem>
-            <Button
-              ref={toggleSuccessToast}
-              onClick={() =>
-                toast({
-                  title: `your Coins loaded successfully`,
-                  status: "success",
-                  isClosable: true,
-                  variant: "left-accent",
-                  duration: 1000,
-                })
-              }
-            ></Button>
-          </WrapItem>
-        </Wrap>
       </Container>
     </>
   );

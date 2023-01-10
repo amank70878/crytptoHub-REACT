@@ -45,13 +45,13 @@ const Home = () => {
   // redux here
   const { currencyReduxState } = useSelector((state) => state.currencyStore);
   const dispatch = useDispatch();
-  // console.log(`home up currencyReduxState ${currencyReduxState}`);
 
   // fetching table content
   const [finalArrayState, setFinalArrayState] = useState("");
   const [currencyState, setCurrencyState] = useState(currencyReduxState);
   const [loadingState, setLoadingState] = useState(true);
   useEffect(() => {
+    document.title = `CryptoHub`;
     const fetchTrendingCoinFunc = async () => {
       // for 7 trending coingecko's coin
       try {
@@ -79,6 +79,7 @@ const Home = () => {
   //fetching coin price
   const [loadingPriceState, setLoadingPriceState] = useState(false);
   const [priceValueState, setPriceValueState] = useState("");
+  const [priceNameState, setPriceNameState] = useState("bitcoin");
   const [priceInputCoin, setPriceInputCoin] = useState("bitcoin");
   const fetchCoinPriceFunc = async () => {
     try {
@@ -89,6 +90,7 @@ const Home = () => {
       setLoadingPriceState(false);
       setPriceValueState(data[priceInputCoin][currencyState]);
       setLoadingPriceState(false);
+      setPriceNameState(priceInputCoin);
     } catch (error) {
       console.warn("error in feching price", error);
     }
@@ -100,18 +102,14 @@ const Home = () => {
       type: "currencyType",
       payload: currencyState,
     });
-    // console.log(`home useEffect currencyReduxState ${currencyReduxState}`);
     fetchCoinPriceFunc(); // eslint-disable-next-line
   }, [currencyState, dispatch]);
 
-  // for dispatching current currencies
+  // for dispatching current currencies to redux
   useEffect(() => {
     setCurrencyState(currencyReduxState);
-    // console.log(`home useEffect currencyReduxState ${currencyReduxState}`);
   }, [currencyReduxState]);
 
-  // console.log(`home down currencyReduxState ${currencyReduxState}`);
-  // console.log(`home currencyState ${currencyState}`);
   return (
     <>
       <VStack width="100vw">
@@ -168,6 +166,7 @@ const Home = () => {
               w={["65vw", "40%"]}
               borderRadius="10px"
               p="1"
+              onSubmit={fetchCoinPriceFunc}
             >
               <Input
                 color="teal"
@@ -204,7 +203,7 @@ const Home = () => {
                       fontSize={["sm", "xl"]}
                       textTransform="capitalize"
                     >
-                      {priceInputCoin}
+                      {priceNameState}
                     </StatLabel>
                     <StatNumber
                       fontSize={["", "md"]}

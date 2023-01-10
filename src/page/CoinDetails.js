@@ -46,6 +46,7 @@ const CoinDetails = () => {
   };
 
   useEffect(() => {
+    document.title = `CryptoHub - Coins / ${coinId}`;
     const fetchIdCoinsFunc = async () => {
       try {
         const { data } = await axios.get(
