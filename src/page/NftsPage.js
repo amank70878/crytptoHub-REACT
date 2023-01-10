@@ -21,7 +21,7 @@ const NftsPage = () => {
   const [loadingState, setLoadingState] = useState(true);
   const [totalNfts, setTotalNfts] = useState(0);
   const [perPage, setPerPage] = useState(100);
-  const [pageNum, setPageNum] = useState(23);
+  const [pageNum, setPageNum] = useState(1);
   const [totalPage, setTotalPage] = useState(23);
   const [btns, setBtns] = useState([]);
 

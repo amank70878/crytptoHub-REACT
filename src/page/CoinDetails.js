@@ -20,7 +20,6 @@ import axios from "axios";
 import Chart from "../components/Chart";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Error from "../components/Error";
 import Loader from "../components/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import DrawerContainer from "../components/DrawerContainer";
@@ -33,9 +32,6 @@ const CoinDetails = () => {
   const { coinId } = useParams();
   const [data, setData] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
-  const [errorState, setErrorState] = useState(false);
-  const [errorCodeState, setErrorCodeState] = useState("");
-  const [errorNameState, setErrorNameState] = useState("");
   const [currencyState, setCurrencyState] = useState(currencyReduxState);
   const [daysForChart, setDaysForChart] = useState("24h");
   const [chartArray, setChartArray] = useState([]);
@@ -59,10 +55,7 @@ const CoinDetails = () => {
         setChartArray(chartData.prices);
         setLoadingState(false);
       } catch (error) {
-        setErrorState(true);
-        setLoadingState(false);
-        setErrorCodeState(error.code);
-        setErrorNameState(error.name);
+        console.warn(error);
       }
     };
     fetchIdCoinsFunc();
@@ -82,12 +75,7 @@ const CoinDetails = () => {
 
   return (
     <>
-      {errorState ? (
-        <Error
-          title={`Warning (${errorNameState}) : ${errorCodeState}`}
-          description={`there is some issue in fetching ${coinId} from Server please try again later`}
-        />
-      ) : loadingState ? (
+      {loadingState ? (
         <Loader />
       ) : (
         <>
