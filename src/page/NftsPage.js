@@ -111,7 +111,7 @@ const NftsPage = () => {
           justifyContent="space-evenly"
         >
           {loadingState ? (
-            <Loader message="Fetching Crypto Exchanges......." />
+            <Loader message="Fetching Nfts......" />
           ) : (
             apiDataState.map((items, indexK) => {
               indexK++;
